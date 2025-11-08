@@ -1,26 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+  --background: #212126;
+  --foreground: #FFFFFF;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  --font-roboto: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-poppins: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html, body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 26px;
+}
+
+/* Font utility classes */
+.font-helvetica {
+  font-family: var(--font-sans);
+}
+
+.font-poppins {
+  font-family: var(--font-poppins);
+}
+
+.font-inter {
+  font-family: var(--font-sans);
+}
+
+.font-roboto {
+  font-family: var(--font-roboto);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+strong {
+  font-weight: bold;
+}
+
+/* Custom Scrollbar Styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  -webkit-appearance: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  min-height: 20px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Checkbox transition optimizations */
+.checkbox-transition {
+  transition: opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  will-change: opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  filter: none;
+  -webkit-filter: none;
+}
+
+/* Prevent layout shifts during checkbox state changes */
+.checkbox-container {
+  contain: layout style;
+  min-height: 32px;
+  min-width: 32px;
+  position: relative;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  background: transparent;
+}
+
+/* Ensure checkbox images have proper background */
+.checkbox-container img {
+  background: transparent;
+  display: block;
+}
+
+/* Prevent white flash during image loading */
+.checkbox-container > div {
+  background: transparent;
+}
+
+/* Ensure smooth checkbox transitions on mobile */
+@media (max-width: 768px) {
+  .checkbox-transition {
+    transition: opacity 150ms cubic-bezier(0.4, 0.0, 0.2, 1);
+    image-rendering: auto;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  .checkbox-container {
+    min-height: 32px;
+    min-width: 32px;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .checkbox-transition {
+    image-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .checkbox-transition {
+    transition: opacity 120ms cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  scrollbar-gutter: stable;
+  /* Force scrollbar to always be visible on macOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Global page scrollbar styling */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  scrollbar-gutter: stable;
+}
+
+html::-webkit-scrollbar {
+  width: 8px;
+  -webkit-appearance: none;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  min-height: 20px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+html::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Ensure scrollbars are always visible */
+html {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.custom-scrollbar {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* macOS Safari specific scrollbar fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 4px !important;
+    min-height: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  /* Force scrollbar to always be visible on macOS */
+  .custom-scrollbar::-webkit-scrollbar-thumb:vertical {
+    min-height: 20px !important;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:horizontal {
+    min-width: 20px !important;
+  }
+  
+  /* Ensure scrollbar track is visible */
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 4px !important;
+  }
+}
+
+/* Additional macOS compatibility */
+@supports (-webkit-appearance: none) {
+  .custom-scrollbar {
+    /* Ensure scrollbar is always visible on WebKit browsers */
+    scrollbar-width: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Force scrollbar to always be visible on macOS */
+    -webkit-scrollbar-width: thin;
+  }
+}
+
+/* Force scrollbar visibility on all WebKit browsers */
+.custom-scrollbar {
+  /* Override any potential hiding */
+  scrollbar-width: thin !important;
+  -webkit-scrollbar-width: thin !important;
+  /* Ensure proper scrolling behavior */
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch;
+  /* Force scrollbar to always be visible */
+  scrollbar-gutter: stable;
+}
+
+/* Final macOS Safari compatibility fix */
+@supports (-webkit-appearance: none) and (not (overflow: -webkit-marquee)) {
+  .custom-scrollbar {
+    /* Force scrollbar to always be visible on macOS Safari */
+    -webkit-scrollbar-width: thin !important;
+    scrollbar-width: thin !important;
+    /* Ensure scrollbar track is visible */
+    scrollbar-gutter: stable both-edges;
+  }
 }
