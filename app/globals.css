@@ -4,7 +4,9 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
 @import "tailwindcss";
-
+@import '@skeletonlabs/skeleton';
+@import '@skeletonlabs/skeleton-react';
+@import '@skeletonlabs/skeleton/themes/cerberus';
 :root {
   --background: #212126;
   --foreground: #FFFFFF;
