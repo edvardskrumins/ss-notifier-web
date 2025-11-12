@@ -14,15 +14,17 @@ type ApiUser = {
 
 export default function Sidebar() {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+    return window.innerWidth >= 1024;
+  });
   const [user, setUser] = useState<ApiUser | null>(null);
-  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
 
   const toggleSidebar = () => setIsOpen((prev) => !prev);
   const refreshUser = useCallback(async () => {
-    setLoading(true);
-
     try {
       const response = await apiFetch("/user", {
         credentials: "include",
@@ -39,12 +41,15 @@ export default function Sidebar() {
     } catch (error) {
       console.error("Failed to refresh user profile:", error);
       setUser(null);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
-  const handleNavigate = () => setIsOpen(false);
+  const handleNavigate = () => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setIsOpen(false);
+    }
+  };
+
   const handleLogout = async () => {
     setIsOpen(false);
 
@@ -79,12 +84,17 @@ export default function Sidebar() {
 
   useEffect(() => {
     refreshUser();
-  }, [refreshUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (pathname === "/login" || pathname === "/register") {
-      refreshUser();
+      const timeout = setTimeout(() => {
+        refreshUser();
+      }, 0);
+      return () => clearTimeout(timeout);
     }
+    return undefined;
   }, [pathname, refreshUser]);
 
   useEffect(() => {
@@ -110,8 +120,8 @@ export default function Sidebar() {
         className="fixed left-4 top-4 z-50 rounded-full border border-zinc-800 bg-zinc-900/80 p-2 text-zinc-200 shadow transition hover:border-zinc-700 hover:bg-zinc-900"
       >
         <Menu
-          className={`h-6 w-6 transition-transform duration-300 ${
-            isOpen ? "rotate-90" : "rotate-0"
+          className={`h-6 w-6 transform-gpu transition-transform duration-500 ease-out ${
+            isOpen ? "rotate-[720deg] scale-110" : "rotate-0 scale-100"
           }`}
         />
       </button>
@@ -125,21 +135,27 @@ export default function Sidebar() {
       )}
 
       <nav
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-zinc-800 bg-zinc-900/95 p-6 text-zinc-100 shadow-lg transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-zinc-800 bg-zinc-900 p-6 pt-20 text-zinc-100 shadow-lg transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
         aria-label="Sākuma navigācija"
       >
         <div className="mb-8 flex items-center gap-3 border-b border-zinc-800 pb-4">
-          <UserIcon className="h-6 w-6 text-zinc-300" />
-          <div>
-            <p className="text-sm font-semibold text-zinc-100">
-              {loading ? "Ielādējas…" : user?.name ?? "Viesis"}
-            </p>
-            <p className="text-xs text-zinc-500">
-              {isAuthenticated ? "Pieslēgts" : "Nepieslēgts"}
-            </p>
-          </div>
+          {isAuthenticated ? (
+            <>
+              <UserIcon className="h-6 w-6 text-zinc-300" />
+              <div>
+                <p className="text-sm font-semibold text-zinc-100">
+                  {user?.name ?? ""}
+                </p>
+              </div>
+            </>
+          ) : (
+            <div>
+              <p className="text-sm font-semibold text-zinc-100">Viesis</p>
+              <p className="text-xs text-zinc-500">Nepieslēgts</p>
+            </div>
+          )}
         </div>
 
         <ul className="space-y-3">

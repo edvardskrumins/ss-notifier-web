@@ -22,8 +22,7 @@ export default async function Subcategories({ categoryId }: Props) {
   const categoryConfig = category ? getCategoryIconConfig(category) : null;
 
   return (
-    <section className="py-10">
-    
+    <section >    
       <div className="mx-auto max-w-6xl px-4">
 
         <Breadcrumbs breadcrumbs={breadcrumbs} />
