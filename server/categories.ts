@@ -1,5 +1,7 @@
 "use server";
 
+import { apiFetch } from "@/app/lib/apiClient";
+
 export type CategoryEntity = {
   id: number;
   title: string;
@@ -41,7 +43,7 @@ export type AdsPayload = {
 };
 
 export async function getCategories(): Promise<CategoryEntity[]> {
-  const response = await fetch(`${process.env.API_URL}/categories`, {
+  const response = await apiFetch(`/categories`, {
     cache: "force-cache",
   });
 
@@ -56,12 +58,9 @@ export async function getCategories(): Promise<CategoryEntity[]> {
 export async function getSubcategories(
   categoryId: number | string
 ): Promise<SubcategoryPayload> {
-  const response = await fetch(
-    `${process.env.API_URL}/categories/${categoryId}/subcategories`,
-    {
-      cache: "no-store",
-    }
-  );
+  const response = await apiFetch(`/categories/${categoryId}/subcategories`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch subcategories");
@@ -80,12 +79,9 @@ export async function getSubcategories(
 }
 
 export async function getAds(categoryId: number | string): Promise<AdsPayload> {
-  const response = await fetch(
-    `${process.env.API_URL}/categories/${categoryId}/ads`,
-    {
-      cache: "no-store",
-    }
-  );
+  const response = await apiFetch(`/categories/${categoryId}/ads`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch ads data");
