@@ -98,6 +98,28 @@ export default function Sidebar() {
   }, [pathname, refreshUser]);
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const updateOffset = () => {
+      const shouldShift = window.innerWidth >= 1024 && isOpen;
+      document.body.style.setProperty(
+        "--sidebar-offset",
+        shouldShift ? "16rem" : "0px"
+      );
+    };
+
+    updateOffset();
+    window.addEventListener("resize", updateOffset);
+
+    return () => {
+      window.removeEventListener("resize", updateOffset);
+      document.body.style.removeProperty("--sidebar-offset");
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     const handleAuthChange = () => {
       refreshUser();
     };
@@ -137,7 +159,7 @@ export default function Sidebar() {
       <nav
         className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-zinc-800 bg-zinc-900 p-6 pt-20 text-zinc-100 shadow-lg transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        }`}
         aria-label="Sākuma navigācija"
       >
         <div className="mb-8 flex items-center gap-3 border-b border-zinc-800 pb-4">

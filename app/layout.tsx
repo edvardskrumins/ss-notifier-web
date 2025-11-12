@@ -38,7 +38,12 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased bg-zinc-950 text-zinc-100`}
       >
         <Sidebar />
-        <main className="min-h-screen pt-20 lg:pl-64 @min-[1666px]:pl-0">{children}</main>
+        <main
+          className="min-h-screen pt-20 transition-[padding] duration-300"
+          style={{ paddingLeft: "var(--sidebar-offset, 0px)" }}
+        >
+          {children}
+        </main>
       </body>
     </html>
   );
