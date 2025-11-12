@@ -92,6 +92,7 @@ export default function RegisterForm() {
           return;
         }
 
+        window.dispatchEvent(new Event("auth:changed"));
         router.push("/");
         router.refresh();
       } catch (error) {

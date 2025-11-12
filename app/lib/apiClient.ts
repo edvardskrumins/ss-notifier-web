@@ -1,10 +1,12 @@
-const API_BASE =
-  typeof window === "undefined" ? process.env.API_URL : process.env.NEXT_PUBLIC_API_URL;
+// const API_BASE =
+//   typeof window === "undefined" ? process.env.API_URL : process.env.NEXT_PUBLIC_API_URL;
 
-const API_BASE_WEB =
-  typeof window === "undefined"
-    ? process.env.API_URL_WEB ?? "http://nginx" 
-    : process.env.NEXT_PUBLIC_API_URL;
+const API_BASE =  typeof window === "undefined" ? process.env.API_BASE: process.env.NEXT_PUBLIC_API_URL; 
+
+// const API_BASE_WEB =
+//   typeof window === "undefined"
+//     ? process.env.API_URL_WEB ?? "http://nginx" 
+//     : process.env.NEXT_PUBLIC_API_URL;
 
 const FRONTEND_ORIGIN =
   process.env.NEXT_PUBLIC_APP_URL ?? "http://ss-notifier.localhost:3001";
@@ -46,7 +48,7 @@ async function ensureCsrfCookie(): Promise<void> {
   }
 
   if (!csrfPromise) {
-    const csrfBase = API_BASE_WEB ?? API_BASE;
+    const csrfBase = API_BASE;
 
     if (!csrfBase) {
       throw new Error(
@@ -141,23 +143,31 @@ async function prepareRequest(method: string) {
   }
 }
 
+type ApiFetchOptions = RequestInit & {
+  suppressRedirectOn401?: boolean;
+};
+
 export async function apiFetch(
   path: string,
-  options: RequestInit = {},
+  options: ApiFetchOptions = {},
   baseUrl?: string
 ): Promise<Response> {
-  const method = options.method ?? "GET";
+  const { suppressRedirectOn401 = false, ...requestInit } = options;
+  const method = requestInit.method ?? "GET";
 
   await prepareRequest(method);
-  const headers = await buildHeaders(method, options.headers);
-
-  const response = await fetch(`${baseUrl ?? API_BASE}${path}`, {
-    ...options,
+  const headers = await buildHeaders(method, requestInit.headers);
+  const response = await fetch(`${baseUrl ?? API_BASE}/api${path}`, {
+    ...requestInit,
     headers,
     credentials: "include",
   });
 
   if (response.status === 401) {
+    if (suppressRedirectOn401) {
+      return response;
+    }
+
     if (typeof window === "undefined") {
       const { redirect } = await import("next/navigation");
       redirect('/login');
