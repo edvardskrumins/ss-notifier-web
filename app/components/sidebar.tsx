@@ -143,7 +143,7 @@ export default function Sidebar() {
       >
         <Menu
           className={`h-6 w-6 transform-gpu transition-transform duration-500 ease-out ${
-            isOpen ? "rotate-[720deg] scale-110" : "rotate-0 scale-100"
+            isOpen ? "rotate-[90deg] scale-110" : "rotate-0 scale-100"
           }`}
         />
       </button>
@@ -163,7 +163,7 @@ export default function Sidebar() {
         aria-label="Sākuma navigācija"
       >
         <div className="mb-8 flex items-center gap-3 border-b border-zinc-800 pb-4">
-          {isAuthenticated ? (
+          {isAuthenticated && (
             <>
               <UserIcon className="h-6 w-6 text-zinc-300" />
               <div>
@@ -172,12 +172,7 @@ export default function Sidebar() {
                 </p>
               </div>
             </>
-          ) : (
-            <div>
-              <p className="text-sm font-semibold text-zinc-100">Viesis</p>
-              <p className="text-xs text-zinc-500">Nepieslēgts</p>
-            </div>
-          )}
+          ) }
         </div>
 
         <ul className="space-y-3">
