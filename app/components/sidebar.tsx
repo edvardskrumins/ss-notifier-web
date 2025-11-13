@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, Home, LogIn, LogOut, User as UserIcon } from "lucide-react";
+import { Menu, Home, LogIn, LogOut, User as UserIcon, ArrowRightToLine } from "lucide-react";
 import { apiFetch } from "@/app/lib/apiClient";
 import { API_URL_WEB } from "@/app/lib/constants";
 import { getCookie } from "@/app/lib/cookies";
@@ -183,14 +183,14 @@ export default function Sidebar() {
           className="relative flex h-full flex-col p-6 pt-20"
           aria-label="Sākuma navigācija"
         >
-          <div className="absolute left-6 top-6">
+          <div className="absolute right-6 top-6">
             <button
               type="button"
               onClick={toggleSidebar}
               aria-label="Collapse navigation"
               className="rounded-xl border border-purple-400/70 bg-zinc-900/80 p-3 text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90"
             >
-              <Menu
+              <ArrowRightToLine
                 className={`h-5 w-5 text-white transform-gpu transition-transform duration-500 ease-out ${
                   sidebarOpen ? "rotate-[180deg] scale-110" : "rotate-0 scale-100"
                 }`}
