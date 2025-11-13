@@ -1,37 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { z } from "zod";
 import { API_URL_WEB } from "@/app/lib/constants";
 import { getCookie } from "@/app/lib/cookies";
 
-const LoginSchema = z.object({
+const ForgotPasswordSchema = z.object({
   email: z.email("Invalid email address"),
-  password: z.string().min(1, { message: "Password is required" }),
 });
 
-type FormErrors = Partial<Record<keyof z.infer<typeof LoginSchema>, string[]>>;
+type FormErrors = Partial<Record<keyof z.infer<typeof ForgotPasswordSchema>, string[]>>;
 
-export default function LoginForm() {
-  const router = useRouter();
+type MessageState =
+  | {
+      type: "success" | "error";
+      text: string;
+    }
+  | null;
+
+export default function ForgotPasswordForm() {
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<FormErrors>({});
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<MessageState>(null);
 
   const handleSubmit = async (formData: FormData) => {
     setErrors({});
     setMessage(null);
 
-    const validated = LoginSchema.safeParse({
+    const validated = ForgotPasswordSchema.safeParse({
       email: formData.get("email"),
-      password: formData.get("password"),
     });
 
     if (!validated.success) {
       setErrors(validated.error.flatten().fieldErrors);
-      setMessage("Fill all required fields.");
+      setMessage({
+        type: "error",
+        text: "Please provide a valid email address.",
+      });
+
       return;
     }
 
@@ -41,15 +48,18 @@ export default function LoginForm() {
       });
     } catch (error) {
       console.error("CSRF cookie fetch failed", error);
-      setMessage("Unable to reach authentication service.");
+      setMessage({
+        type: "error",
+        text: "Unable to reach authentication service.",
+      });
+
       return;
     }
 
     startTransition(async () => {
       try {
         const xsrfToken = getCookie("XSRF-TOKEN");
-
-        const response = await fetch(`${API_URL_WEB}/login`, {
+        const response = await fetch(`${API_URL_WEB}/forgot-password`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -57,37 +67,59 @@ export default function LoginForm() {
             ...(xsrfToken ? { "X-XSRF-TOKEN": xsrfToken } : {}),
           },
           credentials: "include",
-          body: JSON.stringify(validated.data),
+          body: JSON.stringify({ email: validated.data.email }),
         });
 
+        const data = await response.json().catch(() => null);
+
         if (!response.ok) {
-          const data = await response.json().catch(() => null);
+          const validationErrors =
+            data && typeof data === "object" && data !== null && "errors" in data
+              ? (data as { errors?: Record<string, string[]> }).errors ?? {}
+              : {};
+
+          if ("email" in validationErrors && Array.isArray(validationErrors.email)) {
+            setErrors({ email: validationErrors.email });
+          }
+
           const errorMessage =
-            (data && typeof data === "object" && "message" in data
+            (data && typeof data === "object" && data !== null && "message" in data
               ? (data as { message?: string }).message
-              : undefined) ?? "Unable to login. Please check your credentials.";
-          setMessage(errorMessage);
+              : undefined) ?? "We could not process your request. Please try again.";
+
+          setMessage({
+            type: "error",
+            text: errorMessage,
+          });
+
           return;
         }
 
-        window.dispatchEvent(new Event("auth:changed"));
-        router.push("/");
-        router.refresh();
+        const successMessage =
+          (data && typeof data === "object" && data !== null && "status" in data
+            ? (data as { status?: string }).status
+            : undefined) ??
+          "If your email address is registered, you will receive a password reset link shortly.";
+
+        setMessage({
+          type: "success",
+          text: successMessage,
+        });
       } catch (error) {
-        console.error("Login request failed", error);
-        setMessage("Unable to login. Please try again.");
+        console.error("Forgot password request failed", error);
+        setMessage({
+          type: "error",
+          text: "Unable to process your request. Please try again.",
+        });
       }
     });
   };
 
   return (
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-8 shadow-lg">
-      <h1 className="text-2xl font-semibold text-zinc-100">Login</h1>
-      <p className="mt-8 text-sm text-zinc-400">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-blue-400 hover:text-blue-300">
-          Register here
-        </Link>
+      <h1 className="text-2xl font-semibold text-zinc-100">Forgot password</h1>
+      <p className="mt-3 text-sm text-zinc-400">
+        Enter your email address and we&apos;ll send you instructions to reset your password.
       </p>
 
       <form
@@ -119,44 +151,25 @@ export default function LoginForm() {
           </div>
         </div>
 
-        <div>
-          <label className="text-sm font-semibold text-zinc-300" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            aria-invalid={errors.password ? "true" : "false"}
-            aria-describedby="password-error"
-            className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 text-zinc-100 focus:border-blue-500 focus:outline-none"
-          />
-          <div id="password-error" aria-live="polite" aria-atomic="true">
-            {errors.password?.map((error, index) => (
-              <p key={`${error}-${index}`} className="mt-2 text-xs text-red-400">
-                {error}
-              </p>
-            ))}
-          </div>
-        </div>
-
-        {message && <p className="text-sm text-red-400">{message}</p>}
+        {message && (
+          <p
+            className={`text-sm ${
+              message.type === "success" ? "text-green-400" : "text-red-400"
+            }`}
+          >
+            {message.text}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={pending}
           className="w-full rounded-xl border border-purple-400/70 bg-zinc-900/80 px-6 py-2 text-sm font-semibold text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {pending ? "Signing in…" : "Sign In"}
+          {pending ? "Sending link…" : "Send reset link"}
         </button>
-        <Link
-          href="/forgot-password"
-          className="inline-flex w-full items-center justify-center rounded-xl border border-cyan-400/70 bg-zinc-900/80 px-6 py-2 text-sm font-semibold text-white shadow transition hover:border-cyan-300 hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          Forgot password?
-        </Link>
       </form>
     </div>
   );
 }
+
