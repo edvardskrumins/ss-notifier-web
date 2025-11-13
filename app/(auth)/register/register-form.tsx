@@ -105,7 +105,7 @@ export default function RegisterForm() {
   return (
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-8 shadow-lg">
       <h1 className="text-2xl font-semibold text-zinc-100">Register</h1>
-      <p className="mt-2 text-sm text-zinc-400">
+      <p className="mt-4 text-sm text-zinc-400">
         Already have an account?{" "}
         <Link href="/login" className="text-blue-400 hover:text-blue-300">
           Login here
@@ -219,7 +219,7 @@ export default function RegisterForm() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-full bg-blue-500 px-6 py-2 text-sm font-semibold text-zinc-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-xl border border-purple-400/70 bg-zinc-900/80 px-6 py-2 text-sm font-semibold text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {pending ? "Registering…" : "Register"}
         </button>

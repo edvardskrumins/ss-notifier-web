@@ -137,24 +137,29 @@ export default function Sidebar() {
   }, [refreshUser]);
 
   const isAuthenticated = !!user;
-
   const sidebarOpen = hasMounted ? isOpen : false;
 
   return (
     <>
-      <button
-        type="button"
-        onClick={toggleSidebar}
-        aria-label="Toggle navigation"
-        aria-expanded={sidebarOpen}
-        className="fixed left-4 top-4 z-50 rounded-full border border-zinc-800 bg-zinc-900/80 p-2 text-zinc-200 shadow transition hover:border-zinc-700 hover:bg-zinc-900"
+      <div
+        className={`flex justify-start bg-transparent px-4 pt-4 transition-opacity duration-200 ${
+          sidebarOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100"
+        }`}
       >
-        <Menu
-          className={`h-6 w-6 transform-gpu transition-transform duration-500 ease-out ${
-            sidebarOpen ? "rotate-[180deg] scale-110" : "rotate-0 scale-100"
-          }`}
-        />
-      </button>
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          aria-label="Toggle navigation"
+          aria-expanded={sidebarOpen}
+          className="rounded-xl border border-purple-400/70 bg-zinc-900/80 p-3 text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90"
+        >
+          <Menu
+            className={`h-6 w-6 text-white transform-gpu transition-transform duration-500 ease-out ${
+              sidebarOpen ? "rotate-[180deg] scale-110" : "rotate-0 scale-100"
+            }`}
+          />
+        </button>
+      </div>
 
       {isOpen && (
         <div
@@ -164,12 +169,30 @@ export default function Sidebar() {
         />
       )}
 
-      <nav
-        className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-zinc-800 bg-zinc-900 p-6 pt-20 text-zinc-100 shadow-lg transition-transform duration-300 ease-in-out ${
+      <div
+        className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-zinc-800 bg-zinc-900 text-zinc-100 shadow-lg transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
-        aria-label="Sākuma navigācija"
       >
+        <nav
+          className="relative flex h-full flex-col p-6 pt-20"
+          aria-label="Sākuma navigācija"
+        >
+          <div className="absolute left-6 top-6">
+            <button
+              type="button"
+              onClick={toggleSidebar}
+              aria-label="Collapse navigation"
+              className="rounded-xl border border-purple-400/70 bg-zinc-900/80 p-3 text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90"
+            >
+              <Menu
+                className={`h-5 w-5 text-white transform-gpu transition-transform duration-500 ease-out ${
+                  sidebarOpen ? "rotate-[180deg] scale-110" : "rotate-0 scale-100"
+                }`}
+              />
+            </button>
+          </div>
+
         <div className="mb-8 flex items-center gap-3 border-b border-zinc-800 pb-4">
           {isAuthenticated && (
             <>
@@ -217,7 +240,8 @@ export default function Sidebar() {
             )}
           </li>
         </ul>
-      </nav>
+        </nav>
+      </div>
     </>
   );
 }
