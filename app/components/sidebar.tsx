@@ -14,14 +14,18 @@ type ApiUser = {
 
 export default function Sidebar() {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState<boolean>(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-    return window.innerWidth >= 1024;
-  });
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const [user, setUser] = useState<ApiUser | null>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setHasMounted(true);
+
+    if (typeof window !== "undefined" && window.innerWidth >= 1024) {
+      setIsOpen(true);
+    }
+  }, []);
 
   const toggleSidebar = () => setIsOpen((prev) => !prev);
   const refreshUser = useCallback(async () => {
@@ -51,7 +55,9 @@ export default function Sidebar() {
   };
 
   const handleLogout = async () => {
-    setIsOpen(false);
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setIsOpen(false);
+    }
 
     try {
       await fetch(`${API_URL_WEB}/sanctum/csrf-cookie`, {
@@ -132,18 +138,20 @@ export default function Sidebar() {
 
   const isAuthenticated = !!user;
 
+  const sidebarOpen = hasMounted ? isOpen : false;
+
   return (
     <>
       <button
         type="button"
         onClick={toggleSidebar}
         aria-label="Toggle navigation"
-        aria-expanded={isOpen}
+        aria-expanded={sidebarOpen}
         className="fixed left-4 top-4 z-50 rounded-full border border-zinc-800 bg-zinc-900/80 p-2 text-zinc-200 shadow transition hover:border-zinc-700 hover:bg-zinc-900"
       >
         <Menu
           className={`h-6 w-6 transform-gpu transition-transform duration-500 ease-out ${
-            isOpen ? "rotate-[90deg] scale-110" : "rotate-0 scale-100"
+            sidebarOpen ? "rotate-[180deg] scale-110" : "rotate-0 scale-100"
           }`}
         />
       </button>

@@ -83,7 +83,7 @@ export default function LoginForm() {
   return (
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-8 shadow-lg">
       <h1 className="text-2xl font-semibold text-zinc-100">Login</h1>
-      <p className="mt-2 text-sm text-zinc-400">
+      <p className="mt-8 text-sm text-zinc-400">
         Don&apos;t have an account?{" "}
         <Link href="/register" className="text-blue-400 hover:text-blue-300">
           Register here
