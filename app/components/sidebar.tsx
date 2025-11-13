@@ -9,7 +9,12 @@ import { API_URL_WEB } from "@/app/lib/constants";
 import { getCookie } from "@/app/lib/cookies";
 
 type ApiUser = {
+  id: number;
   name: string;
+  email: string;
+  email_verified_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 export default function Sidebar() {
@@ -40,8 +45,8 @@ export default function Sidebar() {
         return;
       }
 
-      const data: ApiUser = await response.json();
-      setUser(data);
+      const data = await response.json();
+      setUser(data.data as ApiUser);
     } catch (error) {
       console.error("Failed to refresh user profile:", error);
       setUser(null);
@@ -211,12 +216,31 @@ export default function Sidebar() {
             <Link
               href="/"
               onClick={handleNavigate}
-              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80"
+              className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80 ${
+                pathname === "/" ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
+              }`}
+              aria-current={pathname === "/" ? "page" : undefined}
             >
               <Home className="h-5 w-5 text-blue-400" />
               Sākums
             </Link>
           </li>
+
+          {isAuthenticated && (
+            <li>
+              <Link
+                href="/profils"
+                onClick={handleNavigate}
+                className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80 ${
+                  pathname === "/profils" ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
+                }`}
+                aria-current={pathname === "/profils" ? "page" : undefined}
+              >
+                <UserIcon className="h-5 w-5 text-purple-300" />
+                Profils
+              </Link>
+            </li>
+          )}
 
           <li>
             {isAuthenticated ? (

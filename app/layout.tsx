@@ -39,7 +39,7 @@ export default async function RootLayout({
       >
         <Sidebar />
         <main
-          className="min-h-screen transition-[padding] duration-300"
+          className=" transition-[padding] duration-300"
           style={{ paddingLeft: "var(--sidebar-offset, 0px)" }}
         >
           {children}
