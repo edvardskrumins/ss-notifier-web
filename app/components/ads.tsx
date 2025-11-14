@@ -18,19 +18,24 @@ function renderFilterField(filter: FilterEntity) {
   switch (filter.type) {
     case "custom_range":
       return (
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          <input
-            type="number"
-            name={`${name}_from`}
-            placeholder="Min"
-            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
-          />
-          <input
-            type="number"
-            name={`${name}_to`}
-            placeholder="Max"
-            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
-          />
+        <div className="mt-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <input
+              type="number"
+              name={`${name}_from`}
+              placeholder="Min"
+              className="w-full flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
+            />
+            <span className="text-center text-zinc-500" aria-hidden="true">
+              -
+            </span>
+            <input
+              type="number"
+              name={`${name}_to`}
+              placeholder="Max"
+              className="w-full flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
+            />
+          </div>
         </div>
       );
 
@@ -49,7 +54,7 @@ function renderFilterField(filter: FilterEntity) {
       return (
         <select
           name={name}
-          className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+          className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-5 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
           defaultValue=""
         >
           <option value="" disabled>
@@ -65,35 +70,40 @@ function renderFilterField(filter: FilterEntity) {
 
     case "select_range":
       return (
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          <select
-            name={`${name}_from`}
-            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Min
-            </option>
-            {filter.values.map((option: FilterValue) => (
-              <option key={`${option.id}-from`} value={option.value}>
-                {option.label ?? option.value}
+        <div className="mt-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <select
+              name={`${name}_from`}
+              className="w-full flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Min
               </option>
-            ))}
-          </select>
-          <select
-            name={`${name}_to`}
-            className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Max
-            </option>
-            {filter.values.map((option: FilterValue) => (
-              <option key={`${option.id}-to`} value={option.value}>
-                {option.label ?? option.value}
+              {filter.values.map((option: FilterValue) => (
+                <option key={`${option.id}-from`} value={option.value}>
+                  {option.label ?? option.value}
+                </option>
+              ))}
+            </select>
+            <span className="text-zinc-500" aria-hidden="true">
+              -
+            </span>
+            <select
+              name={`${name}_to`}
+              className="w-full flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Max
               </option>
-            ))}
-          </select>
+              {filter.values.map((option: FilterValue) => (
+                <option key={`${option.id}-to`} value={option.value}>
+                  {option.label ?? option.value}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       );
 
@@ -111,7 +121,7 @@ export default async function Ads({ categoryId }: AdsProps) {
 
   return (
     <section >
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-4 pb-20">
 
       <Breadcrumbs breadcrumbs={breadcrumbs} />
 
@@ -135,36 +145,47 @@ export default async function Ads({ categoryId }: AdsProps) {
           <p className="mt-6 text-zinc-400">No filters found for this category.</p>
         ) : (
           <form className="mt-8">
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {filters.map((filter: FilterEntity) => (
-                <fieldset
-                  key={filter.id}
-                  className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-6 shadow-sm"
-                >
-                  <div className="text-sm font-semibold uppercase tracking-wide text-zinc-300">
-                    {filter.label}
+            <div className="flex flex-col items-center rounded-3xl border border-zinc-800/80 bg-zinc-900/70 p-8 shadow-xl shadow-black/20">
+              <div className="flex w-full flex-col items-center gap-8">
+                <div className="mx-auto w-full space-y-2 border-b border-zinc-800/70 pb-6 text-left sm:w-[85%] md:w-[75%]">
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold text-zinc-100" htmlFor="default_name">
+                      Nosaukums{" "}
+                      <span className="text-red-500" aria-hidden="true">
+                        *
+                      </span>
+                    </label>
                   </div>
-                  <div className="mt-1 text-[11px] uppercase tracking-wide text-zinc-500">
-                    {filter.type}
-                  </div>
-                  {filter.form_param && (
-                    <div className="mt-1 text-[11px] uppercase tracking-wide text-zinc-600">
-                      param: {filter.form_param}
+                  <input
+                    id="default_name"
+                    name="name"
+                    required
+                    type="text"
+                    placeholder="Nosaukums"
+                    className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
+                  />
+                </div>
+                {filters.map((filter: FilterEntity) => (
+                  <div
+                    key={filter.id}
+                    className="mx-auto w-full space-y-2 border-b border-zinc-800/70 pb-6 text-left last:border-none last:pb-0 sm:w-[85%] md:w-[75%]"
+                  >
+                    <div className="space-y-1">
+                      <div className="text-sm font-semibold text-zinc-100">{filter.label}</div>
                     </div>
-                  )}
+                    {renderFilterField(filter)}
+                  </div>
+                ))}
+              </div>
 
-                  {renderFilterField(filter)}
-                </fieldset>
-              ))}
-            </div>
-
-            <div className="mt-8 flex justify-end">
-              <button
-                type="submit"
-                className="rounded-full bg-blue-500 px-6 py-2 text-sm font-semibold text-zinc-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-blue-400"
-              >
-                Apply Filters
-              </button>
+              <div className="mt-4 flex w-full justify-center sm:w-[85%] md:w-[75%]">
+                <button
+                  type="submit"
+                  className="mt-8 rounded-xl border border-purple-400/70 bg-zinc-900/80 px-6 py-2 text-sm font-semibold text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  Saglabāt 
+                </button>
+              </div>
             </div>
           </form>
         )}
