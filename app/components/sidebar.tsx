@@ -230,12 +230,12 @@ export default function Sidebar() {
             <>
               <li>
                 <Link
-                  href="/saglabatie-meklejumi"
+                  href="/saved-ad-notifications"
                   onClick={handleNavigate}
                   className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80 ${
-                    pathname?.startsWith("/saglabatie-meklejumi") ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
+                    pathname?.startsWith("/saved-ad-notifications") ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
                   }`}
-                  aria-current={pathname?.startsWith("/saglabatie-meklejumi") ? "page" : undefined}
+                  aria-current={pathname?.startsWith("/saved-ad-notifications") ? "page" : undefined}
                 >
                   <Bookmark className="h-5 w-5 text-yellow-400" />
                   Saglabātie meklējumi

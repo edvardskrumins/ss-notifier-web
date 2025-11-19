@@ -229,7 +229,7 @@ export default function SavedSearchesPage() {
                     )}
                   </button>
                   <Link
-                    href={`/saglabatie-meklejumi/${notification.id}`}
+                    href={`/saved-ad-notifications/${notification.id}`}
                     className="rounded-xl border border-purple-400/70 bg-purple-500/10 p-2 text-purple-400 transition hover:bg-purple-500/20"
                     title="Rediģēt"
                   >

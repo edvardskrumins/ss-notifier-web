@@ -126,7 +126,7 @@ export default function EditSavedSearchPage() {
     <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
       <div className="mb-8 flex items-center gap-3">
         <Link
-          href="/saglabatie-meklejumi"
+          href="/saved-ad-notifications"
           className="rounded-xl border border-zinc-800 p-2 bg-zinc-900/70 hover:bg-zinc-900"
         >
           <ChevronLeft className="h-5 w-5 text-zinc-300" />
@@ -317,7 +317,7 @@ function EditAdsForm({
 
       setSuccess("Paziņojums veiksmīgi atjaunināts.");
       setTimeout(() => {
-        router.push("/saglabatie-meklejumi");
+        router.push("/saved-ad-notifications");
       }, 1500);
     } catch (err) {
       const message =
