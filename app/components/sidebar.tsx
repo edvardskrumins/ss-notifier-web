@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, Home, LogIn, LogOut, User as UserIcon, ArrowRightToLine } from "lucide-react";
+import { Menu, Home, LogIn, LogOut, User as UserIcon, ArrowRightToLine, Bookmark } from "lucide-react";
 import { apiFetch } from "@/app/lib/apiClient";
 import { API_URL_WEB } from "@/app/lib/constants";
 import { getCookie } from "@/app/lib/cookies";
@@ -227,19 +227,34 @@ export default function Sidebar() {
           </li>
 
           {isAuthenticated && (
-            <li>
-              <Link
-                href="/profils"
-                onClick={handleNavigate}
-                className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80 ${
-                  pathname === "/profils" ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
-                }`}
-                aria-current={pathname === "/profils" ? "page" : undefined}
-              >
-                <UserIcon className="h-5 w-5 text-purple-300" />
-                Profils
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link
+                  href="/saglabatie-meklejumi"
+                  onClick={handleNavigate}
+                  className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80 ${
+                    pathname?.startsWith("/saglabatie-meklejumi") ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
+                  }`}
+                  aria-current={pathname?.startsWith("/saglabatie-meklejumi") ? "page" : undefined}
+                >
+                  <Bookmark className="h-5 w-5 text-yellow-400" />
+                  Saglabātie meklējumi
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/profils"
+                  onClick={handleNavigate}
+                  className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80 ${
+                    pathname === "/profils" ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
+                  }`}
+                  aria-current={pathname === "/profils" ? "page" : undefined}
+                >
+                  <UserIcon className="h-5 w-5 text-purple-300" />
+                  Profils
+                </Link>
+              </li>
+            </>
           )}
 
           <li>
