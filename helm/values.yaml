@@ -1,0 +1,30 @@
+imageRegistry: ghcr.io
+imageRepository: edvardskrumins/ss-notifier-web
+imagePullSecrets: ["ghcr-secret"]
+
+web:
+  image:
+    repository: ss-notifier-web
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 2
+
+namespace: ss-notifier
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  className: traefik-external
+  hosts:
+    - host: ss-notifier.edvardskrumins.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: edvardskrumins-com-tls
+      hosts:
+        - ss-notifier.edvardskrumins.com
+

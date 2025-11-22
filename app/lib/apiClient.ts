@@ -1,12 +1,5 @@
-// const API_BASE =
-//   typeof window === "undefined" ? process.env.API_URL : process.env.NEXT_PUBLIC_API_URL;
 
-const API_BASE =  typeof window === "undefined" ? process.env.API_BASE: process.env.NEXT_PUBLIC_API_URL; 
-
-// const API_BASE_WEB =
-//   typeof window === "undefined"
-//     ? process.env.API_URL_WEB ?? "http://nginx" 
-//     : process.env.NEXT_PUBLIC_API_URL;
+const API_BASE =  typeof window === "undefined" ? process.env.API_URL_WEB: process.env.NEXT_PUBLIC_API_URL; 
 
 const FRONTEND_ORIGIN =
   process.env.NEXT_PUBLIC_APP_URL ?? "http://ss-notifier.localhost:3001";
