@@ -53,7 +53,7 @@ jobs:
           labels: ${{ steps.meta-web.outputs.labels }}
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME_WEB }}:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME_WEB }}:buildcache,mode=max
-          args: |
+          build-args: |
             --build-arg NEXT_PUBLIC_API_URL=${{ env.NEXT_PUBLIC_API_URL }}
             --build-arg NEXT_PUBLIC_APP_URL=${{ env.NEXT_PUBLIC_APP_URL }}
 
