@@ -156,7 +156,7 @@ export default function Sidebar() {
           onClick={toggleSidebar}
           aria-label="Toggle navigation"
           aria-expanded={sidebarOpen}
-          className="mb-8 rounded-xl border border-purple-400/70 bg-zinc-900/80 p-3 text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90"
+          className="mb-6 rounded-xl border border-purple-400/70 bg-zinc-900/80 p-3 text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90"
         >
           <Menu
             className={`h-6 w-6 text-white transform-gpu transition-transform duration-500 ease-out ${
@@ -238,7 +238,7 @@ export default function Sidebar() {
                   aria-current={pathname?.startsWith("/saved-ad-notifications") ? "page" : undefined}
                 >
                   <Bookmark className="h-5 w-5 text-yellow-400" />
-                  Saglabātie meklējumi
+                  Saglabātie
                 </Link>
               </li>
               <li>

@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { apiFetch, extractErrorMessage } from "@/app/lib/apiClient";
 import { Bookmark, Edit, Power, PowerOff } from "lucide-react";
 
@@ -43,11 +45,15 @@ type AdNotification = {
   updated_at: string;
 };
 
-export default function SavedSearchesPage() {
+function SavedSearchesPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [notifications, setNotifications] = useState<AdNotification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [toggling, setToggling] = useState<number | null>(null);
+  const [highlightedId, setHighlightedId] = useState<number | null>(null);
+  const shownToastRef = useRef<number | null>(null);
 
   const fetchNotifications = async () => {
     try {
@@ -110,6 +116,40 @@ export default function SavedSearchesPage() {
     fetchNotifications();
   }, []);
 
+  useEffect(() => {
+    const createdId = searchParams.get("created");
+    if (createdId && !loading && notifications.length > 0) {
+      const notificationId = parseInt(createdId, 10);
+      const createdNotification = notifications.find((n) => n.id === notificationId);
+      
+      if (createdNotification && shownToastRef.current !== notificationId) {
+        shownToastRef.current = notificationId;
+        
+        toast.success("Paziņojums veiksmīgi saglabāts!", {
+          duration: 4000,
+        });
+
+        setHighlightedId(notificationId);
+        
+        setTimeout(() => {
+          setHighlightedId(null);
+        }, 5000);
+
+        const newSearchParams = new URLSearchParams(searchParams.toString());
+        newSearchParams.delete("created");
+        const newQuery = newSearchParams.toString();
+        router.replace(`/saved-ad-notifications${newQuery ? `?${newQuery}` : ""}`, { scroll: false });
+        
+        setTimeout(() => {
+          const element = document.getElementById(`notification-${notificationId}`);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 100);
+      }
+    }
+  }, [searchParams, notifications, loading, router]);
+
   if (loading) {
     return (
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
@@ -153,8 +193,13 @@ export default function SavedSearchesPage() {
         <div className="space-y-4">
           {notifications.map((notification) => (
             <div
+              id={`notification-${notification.id}`}
               key={notification.id}
-              className="rounded-3xl border border-zinc-800/80 bg-zinc-900/70 p-6 shadow-xl shadow-black/20"
+              className={`rounded-3xl border p-6 shadow-xl shadow-black/20 transition-all duration-500 ${
+                highlightedId === notification.id
+                  ? "border-purple-400/70 bg-zinc-900/70 ring-2 ring-purple-400/50"
+                  : "border-zinc-800/80 bg-zinc-900/70"
+              }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -202,21 +247,21 @@ export default function SavedSearchesPage() {
                     disabled={toggling === notification.id}
                     className={`rounded-xl border p-2 transition ${
                       notification.active
-                        ? "border-red-400/70 bg-red-500/10 text-red-400 hover:bg-red-500/20"
-                        : "border-green-400/70 bg-green-500/10 text-green-400 hover:bg-green-500/20"
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
+                        ? "border-green-400/70 bg-green-500/10 text-green-400 hover:bg-green-500/20"
+                        : "border-red-400/70 bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                      } disabled:cursor-not-allowed disabled:opacity-50`}
                     title={
                       notification.active
-                        ? "Deaktivizēt"
-                        : "Aktivizēt"
+                        ? "Aktivizēt"
+                        : "Deaktivizēt"
                     }
                   >
                     {toggling === notification.id ? (
                       <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
                     ) : notification.active ? (
-                      <PowerOff className="h-5 w-5" />
-                    ) : (
                       <Power className="h-5 w-5" />
+                    ) : (
+                      <PowerOff className="h-5 w-5" />
                     )}
                   </button>
                   <Link
@@ -233,6 +278,20 @@ export default function SavedSearchesPage() {
         </div>
       )}
     </section>
+  );
+}
+
+export default function SavedSearchesPage() {
+  return (
+    <Suspense fallback={
+      <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
+        <div className="flex items-center justify-center py-20">
+          <p className="text-zinc-400">Ielādē...</p>
+        </div>
+      </section>
+    }>
+      <SavedSearchesPageContent />
+    </Suspense>
   );
 }
 

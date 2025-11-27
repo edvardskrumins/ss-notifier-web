@@ -349,7 +349,7 @@ function EditAdsForm({
                 defaultValue={fromValue}
                 className="w-full flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
               />
-              <span className="text-center text-zinc-500" aria-hidden="true">
+              <span className="w-full text-center text-zinc-500 sm:w-auto" aria-hidden="true">
                 -
               </span>
               <input
@@ -429,7 +429,7 @@ function EditAdsForm({
                   </option>
                 ))}
               </select>
-              <span className="text-zinc-500" aria-hidden="true">
+              <span className="w-full text-center text-zinc-500 sm:w-auto" aria-hidden="true">
                 -
               </span>
               <select

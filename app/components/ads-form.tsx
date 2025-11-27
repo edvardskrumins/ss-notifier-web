@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FilterEntity, FilterValue } from "@/server/categories";
 import { apiFetch, extractErrorMessage } from "@/app/lib/apiClient";
 
@@ -40,7 +41,7 @@ function renderFilterField(filter: FilterEntity) {
               placeholder="Min"
               className="w-full flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
             />
-            <span className="text-center text-zinc-500" aria-hidden="true">
+            <span className="w-full text-center text-zinc-500 sm:w-auto" aria-hidden="true">
               -
             </span>
             <input
@@ -118,7 +119,7 @@ function renderFilterField(filter: FilterEntity) {
                 </option>
               ))}
             </select>
-            <span className="text-zinc-500" aria-hidden="true">
+            <span className="w-full text-center text-zinc-500 sm:w-auto" aria-hidden="true">
               -
             </span>
             <select
@@ -154,6 +155,7 @@ function renderFilterField(filter: FilterEntity) {
 }
 
 export default function AdsForm({ filters, categoryId }: AdsFormProps) {
+  const router = useRouter();
   const [pending, setPending] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -309,8 +311,17 @@ export default function AdsForm({ filters, categoryId }: AdsFormProps) {
         throw new Error(message);
       }
 
+      const responseData = await response.json();
+      const notificationId = responseData?.data?.id;
+
       setSuccess("Paziņojums veiksmīgi saglabāts.");
-      event.currentTarget.reset();
+      
+      if (notificationId) {
+        router.push(`/saved-ad-notifications?created=${notificationId}`);
+      } else {
+        router.push("/saved-ad-notifications");
+      }
+
     } catch (err) {
       const message =
         err instanceof Error
