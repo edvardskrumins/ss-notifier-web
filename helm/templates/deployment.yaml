@@ -7,6 +7,11 @@ metadata:
     {{- include "ss-notifier-web.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.web.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: {{ .Values.web.strategy.maxSurge | default 1 }}
+      maxUnavailable: {{ .Values.web.strategy.maxUnavailable | default 0 }}
   selector:
     matchLabels:
       {{- include "ss-notifier-web.selectorLabels" . | nindent 6 }}
