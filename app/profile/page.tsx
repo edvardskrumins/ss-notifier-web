@@ -11,6 +11,13 @@ type ApiUser = {
   email_verified_at: string | null;
   created_at: string;
   updated_at: string;
+  two_factor_secret: string | null;
+  two_factor_recovery_codes: string | null;
+  two_factor_confirmed_at: string | null;
+};
+
+type ApiUserResponse = {
+  data: ApiUser;
 };
 
 type AlertState = {
@@ -18,7 +25,7 @@ type AlertState = {
   message: string;
 } | null;
 
-export default function ProfilsPage() {
+export default function ProfilPage() {
   const [user, setUser] = useState<ApiUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,16 +55,13 @@ export default function ProfilsPage() {
       });
 
       if (!response.ok) {
-        const message = await extractErrorMessage(
-          response,
-          "Unable to load user.",
-        );
+        const message = await extractErrorMessage(response, "Unable to load user.");
         setError(message);
         setUser(null);
         return;
       }
 
-      const data = await readJson<ApiUser>(response);
+      const { data } = await readJson<ApiUserResponse>(response);
       setUser(data);
     } catch (err) {
       console.error("Failed to load user profile", err);
@@ -83,9 +87,7 @@ export default function ProfilsPage() {
 
       const message = await extractErrorMessage(
         response,
-        response.ok
-          ? "Verification email sent."
-          : "Unable to resend verification email.",
+        response.ok ? "Verification email sent." : "Unable to resend verification email."
       );
 
       setVerificationAlert({
@@ -147,10 +149,7 @@ export default function ProfilsPage() {
             type: "error",
             message:
               validationErrors[0] ??
-              (await extractErrorMessage(
-                response,
-                "Unable to update password.",
-              )),
+              (await extractErrorMessage(response, "Unable to update password.")),
           });
           return;
         }
@@ -158,10 +157,7 @@ export default function ProfilsPage() {
         if (!response.ok) {
           setPasswordAlert({
             type: "error",
-            message: await extractErrorMessage(
-              response,
-              "Unable to update password.",
-            ),
+            message: await extractErrorMessage(response, "Unable to update password."),
           });
           return;
         }
@@ -183,7 +179,7 @@ export default function ProfilsPage() {
         setPasswordPending(false);
       }
     },
-    [loadUser, password, passwordConfirmation],
+    [loadUser, password, passwordConfirmation]
   );
 
   const handleTogglePasswordForm = useCallback(() => {
@@ -203,20 +199,18 @@ export default function ProfilsPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10">
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-8 shadow-xl">
+      <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-2 shadow-xl">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div>
+          <div className="p-4">
             <h1 className="text-2xl font-semibold text-zinc-100">Profils</h1>
-            <p className="text-sm text-zinc-400">
-              Manage your account details and security.
-            </p>
+            <p className="text-sm text-zinc-400">Pārvaldiet sava profila informāciju</p>
           </div>
         </div>
 
         {loading ? (
           <div className="mt-8 flex items-center justify-center text-zinc-400">
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span className="ml-3 text-sm">Loading profile…</span>
+            <span className="ml-3 text-sm">Ielādē profila informāciju…</span>
           </div>
         ) : error ? (
           <p className="mt-8 text-sm text-red-400">{error}</p>
@@ -225,16 +219,12 @@ export default function ProfilsPage() {
             <section className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-950/60 p-6">
               <div className="flex flex-col gap-6 md:flex-row md:justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-zinc-400">Name</p>
-                  <p className="mt-1 text-lg font-medium text-zinc-100">
-                    {user.name}
-                  </p>
+                  <p className="text-sm font-semibold text-zinc-400">Vārds</p>
+                  <p className="mt-1 text-lg font-medium text-zinc-100">{user.name}</p>
                 </div>
                 <div className="md:text-right">
-                  <p className="text-sm font-semibold text-zinc-400">Email</p>
-                  <p className="mt-1 break-all text-lg font-medium text-zinc-100">
-                    {user.email}
-                  </p>
+                  <p className="text-sm font-semibold text-zinc-400">E-pasts</p>
+                  <p className="mt-1 break-all text-lg font-medium text-zinc-100">{user.email}</p>
                 </div>
               </div>
 
@@ -242,7 +232,7 @@ export default function ProfilsPage() {
                 <div className="flex items-center gap-3">
                   <span
                     className="flex items-center gap-2"
-                    title={isVerified ? "Email verified" : "Email not verified"}
+                    title={isVerified ? "E-pasts apstiprināts" : "E-pasts nav apstiprināts"}
                   >
                     {isVerified ? (
                       <CheckCircle className="h-6 w-6 text-green-400" aria-hidden />
@@ -250,7 +240,7 @@ export default function ProfilsPage() {
                       <XCircle className="h-6 w-6 text-red-400" aria-hidden />
                     )}
                     <span className="text-sm font-medium text-zinc-300">
-                      {isVerified ? "Verified" : "Not verified"}
+                      {isVerified ? "Apstiprināts" : "Nav verificēts"}
                     </span>
                   </span>
                 </div>
@@ -263,7 +253,7 @@ export default function ProfilsPage() {
                       disabled={verificationPending}
                       className="rounded-xl border border-purple-400/70 bg-zinc-900/80 px-4 py-2 text-sm font-semibold text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-70"
                     >
-                      {verificationPending ? "Sending…" : "Resend verification email"}
+                      {verificationPending ? "Sūtīšana…" : "Atkārtot verificēšanu"}
                     </button>
                   </div>
                 )}
@@ -272,9 +262,7 @@ export default function ProfilsPage() {
               {verificationAlert && (
                 <p
                   className={`mt-4 text-sm ${
-                    verificationAlert.type === "success"
-                      ? "text-green-400"
-                      : "text-red-400"
+                    verificationAlert.type === "success" ? "text-green-400" : "text-red-400"
                   }`}
                 >
                   {verificationAlert.message}
@@ -285,11 +273,9 @@ export default function ProfilsPage() {
             <section className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-950/60 p-6">
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold text-zinc-100">
-                    Change password
-                  </h2>
+                  <h2 className="text-lg font-semibold text-zinc-100">Mainīt paroli</h2>
                   <p className="text-sm text-zinc-400">
-                    Keep your account secure by using a strong password.
+                    Saglabājiet savu kontu drošu, izmantojot spēcīgu paroli.
                   </p>
                 </div>
                 <button
@@ -297,16 +283,14 @@ export default function ProfilsPage() {
                   onClick={handleTogglePasswordForm}
                   className="self-start rounded-xl border border-purple-400/70 bg-zinc-900/80 px-4 py-2 text-sm font-semibold text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90"
                 >
-                  {showPasswordForm ? "Cancel" : "Change"}
+                  {showPasswordForm ? "Atcelt" : "Mainīt"}
                 </button>
               </div>
 
               {passwordAlert && (
                 <p
                   className={`mt-4 text-sm ${
-                    passwordAlert.type === "success"
-                      ? "text-green-400"
-                      : "text-red-400"
+                    passwordAlert.type === "success" ? "text-green-400" : "text-red-400"
                   }`}
                 >
                   {passwordAlert.message}
@@ -315,9 +299,7 @@ export default function ProfilsPage() {
 
               <div
                 className={`grid transition-all duration-300 ease-in-out ${
-                  showPasswordForm
-                    ? "mt-4 grid-rows-[1fr] opacity-100"
-                    : "grid-rows-[0fr] opacity-0"
+                  showPasswordForm ? "mt-4 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                 }`}
               >
                 <div className="overflow-hidden">
@@ -326,10 +308,7 @@ export default function ProfilsPage() {
                     className="space-y-5"
                   >
                     <div>
-                      <label
-                        htmlFor="password"
-                        className="text-sm font-semibold text-zinc-300"
-                      >
+                      <label htmlFor="password" className="text-sm font-semibold text-zinc-300">
                         New password
                       </label>
                       <input
@@ -355,9 +334,7 @@ export default function ProfilsPage() {
                         name="passwordConfirmation"
                         type="password"
                         value={passwordConfirmation}
-                        onChange={(event) =>
-                          setPasswordConfirmation(event.target.value)
-                        }
+                        onChange={(event) => setPasswordConfirmation(event.target.value)}
                         required
                         className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2 text-zinc-100 focus:border-blue-500 focus:outline-none"
                       />
@@ -376,7 +353,7 @@ export default function ProfilsPage() {
                     <button
                       type="submit"
                       disabled={passwordPending}
-                      className="w-full rounded-xl border border-purple-400/70 bg-zinc-900/80 px-6 py-2 text-sm font-semibold text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="w-full rounded-xl border border-purple-400/70 bg-zinc-900/80 px-6 py-2 text-sm font-semibold text-white shadow transition hover-border-purple-300 hover-bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       {passwordPending ? "Saving…" : "Save new password"}
                     </button>

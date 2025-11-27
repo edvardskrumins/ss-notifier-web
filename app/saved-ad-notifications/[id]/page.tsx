@@ -380,10 +380,10 @@ function EditAdsForm({
           <select
             name={baseName}
             defaultValue={singleValue}
-            className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-5 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+            className="mt-3  w-full rounded-xl border border-zinc-800 bg-zinc-950 px-5 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
           >
             <option value="" disabled>
-              Select an option
+              Izvēlies opciju
             </option>
             {filter.values.map((option) => (
               <option key={option.id} value={option.value}>

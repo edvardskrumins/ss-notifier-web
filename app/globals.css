@@ -12,7 +12,7 @@
   --foreground: #FFFFFF;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   --font-roboto: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-poppins: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -263,10 +263,13 @@ html {
 /* Final macOS Safari compatibility fix */
 @supports (-webkit-appearance: none) and (not (overflow: -webkit-marquee)) {
   .custom-scrollbar {
-    /* Force scrollbar to always be visible on macOS Safari */
     -webkit-scrollbar-width: thin !important;
     scrollbar-width: thin !important;
-    /* Ensure scrollbar track is visible */
     scrollbar-gutter: stable both-edges;
   }
 }
+
+select {
+  color-scheme: dark;
+}
+

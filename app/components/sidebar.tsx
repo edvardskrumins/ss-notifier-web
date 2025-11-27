@@ -243,12 +243,12 @@ export default function Sidebar() {
               </li>
               <li>
                 <Link
-                  href="/profils"
+                  href="/profile"
                   onClick={handleNavigate}
                   className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80 ${
-                    pathname === "/profils" ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
+                    pathname === "/profile" ? "border-zinc-700 bg-zinc-900/80" : "border-transparent"
                   }`}
-                  aria-current={pathname === "/profils" ? "page" : undefined}
+                  aria-current={pathname === "/profile" ? "page" : undefined}
                 >
                   <UserIcon className="h-5 w-5 text-purple-300" />
                   Profils

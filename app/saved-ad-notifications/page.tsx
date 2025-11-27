@@ -5,22 +5,14 @@ import Link from "next/link";
 import { apiFetch, extractErrorMessage } from "@/app/lib/apiClient";
 import { Bookmark, Edit, Power, PowerOff } from "lucide-react";
 
-/**
- * Build the correct ad URL from category URL and ad ID.
- * Category URL format: https://www.ss.com/lv/transport/cars/bmw/760/
- * Ad URL format: https://www.ss.com/msg/lv/transport/cars/bmw/760/jeijo.html
- */
+
 function buildAdUrl(categoryUrl: string, adId: string): string {
   try {
     const url = new URL(categoryUrl);
-    // Extract the path (e.g., /lv/transport/cars/bmw/760/)
     const path = url.pathname;
-    // Prepend /msg and append the ad ID with .html extension
     const adPath = `/msg${path}${adId}.html`;
-    // Reconstruct the full URL
     return `${url.origin}${adPath}`;
   } catch {
-    // Fallback if URL parsing fails
     return `https://www.ss.com/msg${categoryUrl.replace('https://www.ss.com', '')}${adId}.html`;
   }
 }
@@ -102,7 +94,6 @@ export default function SavedSearchesPage() {
         throw new Error(message);
       }
 
-      // Refresh the list
       await fetchNotifications();
     } catch (err) {
       const message =
@@ -132,7 +123,7 @@ export default function SavedSearchesPage() {
   if (error) {
     return (
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
-        <div className="flex items-center justify-center py-20">
+        <div className="flex items-center justify-start py-20">
           <p className="text-red-400">{error}</p>
         </div>
       </section>

@@ -72,7 +72,7 @@ function renderFilterField(filter: FilterEntity) {
           defaultValue=""
         >
           <option value="" disabled>
-            Select an option
+            Izvēlies opciju
           </option>
           {filter.values.map((option: FilterValue) => (
             <option key={option.id} value={option.value}>
