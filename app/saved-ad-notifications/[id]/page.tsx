@@ -380,7 +380,16 @@ function EditAdsForm({
           <select
             name={baseName}
             defaultValue={singleValue}
-            className="mt-3  w-full rounded-xl border border-zinc-800 bg-zinc-950 px-5 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+            className="mt-3 w-full appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-5 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+            style={{
+              WebkitAppearance: 'none',
+              MozAppearance: 'none',
+              appearance: 'none',
+              paddingLeft: '1.25rem',
+              paddingRight: '1.25rem',
+              paddingTop: '0.5rem',
+              paddingBottom: '0.5rem',
+            }}
           >
             <option value="" disabled>
               Izvēlies opciju
@@ -400,7 +409,16 @@ function EditAdsForm({
               <select
                 name={`${baseName}_from`}
                 defaultValue={fromValue}
-                className="w-full flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+                className="w-full flex-1 appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+                style={{
+                  WebkitAppearance: 'none',
+                  MozAppearance: 'none',
+                  appearance: 'none',
+                  paddingLeft: '0.75rem',
+                  paddingRight: '0.75rem',
+                  paddingTop: '0.5rem',
+                  paddingBottom: '0.5rem',
+                }}
               >
                 <option value="" disabled>
                   Min
@@ -417,7 +435,16 @@ function EditAdsForm({
               <select
                 name={`${baseName}_to`}
                 defaultValue={toValue}
-                className="w-full flex-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+                className="w-full flex-1 appearance-none rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+                style={{
+                  WebkitAppearance: 'none',
+                  MozAppearance: 'none',
+                  appearance: 'none',
+                  paddingLeft: '0.75rem',
+                  paddingRight: '0.75rem',
+                  paddingTop: '0.5rem',
+                  paddingBottom: '0.5rem',
+                }}
               >
                 <option value="" disabled>
                   Max

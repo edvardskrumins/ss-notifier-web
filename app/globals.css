@@ -271,5 +271,17 @@ html {
 
 select {
   color-scheme: dark;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Force padding on mobile select elements */
+@media (max-width: 768px) {
+  select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
 }
 
