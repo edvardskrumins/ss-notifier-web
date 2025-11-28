@@ -1,7 +1,6 @@
 "use client";
 
 import { useLocale } from 'next-intl';
-import { usePathname, useRouter } from '@/app/lib/navigation';
 import { useState } from 'react';
 import { Languages } from 'lucide-react';
 import { LV, GB } from 'country-flag-icons/react/3x2';
@@ -13,23 +12,14 @@ const languages = [
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   const currentLanguage = languages.find((lang) => lang.code === locale) || languages[0];
   const CurrentFlag = currentLanguage.flag;
 
   const switchLanguage = (newLocale: string) => {
-    // Get pathname without locale prefix
-    const segments = pathname.split('/').filter(Boolean);
-    const hasLocale = segments[0] === 'lv' || segments[0] === 'en';
-    const pathWithoutLocale = hasLocale ? '/' + segments.slice(1).join('/') : pathname;
+    const newPath = `/${newLocale}`;
     
-    // With localePrefix: 'always', all locales need a prefix
-    const newPath = `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
-    
-    // Use full page navigation to ensure locale change is applied
     window.location.href = newPath;
     setIsOpen(false);
   };
