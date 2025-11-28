@@ -42,8 +42,8 @@ export type AdsPayload = {
   category: CategoryEntity | null;
 };
 
-export async function getCategories(): Promise<CategoryEntity[]> {
-  const response = await apiFetch(`/categories`, {
+export async function getCategories(locale: string = 'lv'): Promise<CategoryEntity[]> {
+  const response = await apiFetch(`/categories?locale=${locale}`, {
     cache: "force-cache",
   });
 
@@ -56,9 +56,10 @@ export async function getCategories(): Promise<CategoryEntity[]> {
 }
 
 export async function getSubcategories(
-  categoryId: number | string
+  categoryId: number | string,
+  locale: string = 'lv'
 ): Promise<SubcategoryPayload> {
-  const response = await apiFetch(`/categories/${categoryId}/subcategories`, {
+  const response = await apiFetch(`/categories/${categoryId}/subcategories?locale=${locale}`, {
     cache: "no-store",
   });
 
@@ -78,8 +79,8 @@ export async function getSubcategories(
   };
 }
 
-export async function getAds(categoryId: number | string): Promise<AdsPayload> {
-  const response = await apiFetch(`/categories/${categoryId}/ads`, {
+export async function getAds(categoryId: number | string, locale: string = 'lv'): Promise<AdsPayload> {
+  const response = await apiFetch(`/categories/${categoryId}/ads?locale=${locale}`, {
     cache: "no-store",
   });
 

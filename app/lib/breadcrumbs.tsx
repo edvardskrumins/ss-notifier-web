@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/app/lib/navigation";
 import type { Breadcrumb } from "@/server/categories";
 import { ChevronRight } from "lucide-react";
 

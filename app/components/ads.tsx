@@ -1,16 +1,18 @@
-import Link from "next/link";
+import { Link } from "@/app/lib/navigation";
 import { ChevronLeft } from "lucide-react";
 import Breadcrumbs from "@/app/lib/breadcrumbs";
 import { getCategoryIconConfig } from "@/app/lib/categoryIcon";
 import { getAds } from "@/server/categories";
 import AdsForm from "@/app/components/ads-form";
+import { AdsText } from "./ads-text";
 
 interface AdsProps {
   categoryId: string;
+  locale?: string;
 }
 
-export default async function Ads({ categoryId }: AdsProps) {
-  const { filters, breadcrumbs, category } = await getAds(categoryId);
+export default async function Ads({ categoryId, locale = 'lv' }: AdsProps) {
+  const { filters, breadcrumbs, category } = await getAds(categoryId, locale);
 
   const parentCrumb = breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 2] : null;
   const backHref = parentCrumb ? `/subcategories/${parentCrumb.id}` : "/";
@@ -39,7 +41,7 @@ export default async function Ads({ categoryId }: AdsProps) {
         </div>
 
         {filters.length === 0 ? (
-          <p className="mt-6 text-zinc-400">No filters found for this category.</p>
+          <AdsText />
         ) : (
           <AdsForm filters={filters} categoryId={categoryId} />
         )}

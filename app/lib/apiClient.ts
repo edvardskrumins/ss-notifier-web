@@ -150,7 +150,40 @@ export async function apiFetch(
 
   await prepareRequest(method);
   const headers = await buildHeaders(method, requestInit.headers);
-  const response = await fetch(`${baseUrl ?? API_BASE}/api${path}`, {
+  
+  // Add locale to query string if it's a GET request
+  let url = `${baseUrl ?? API_BASE}/api${path}`;
+  if (method === "GET") {
+    let locale = 'lv'; // Default
+    if (typeof window !== "undefined") {
+      // Client-side: get locale from pathname
+      const pathSegments = window.location.pathname.split('/').filter(Boolean);
+      locale = (pathSegments[0] === 'lv' || pathSegments[0] === 'en') ? pathSegments[0] : 'lv';
+    } else {
+      // Server-side: try to get locale from next-intl
+      try {
+        const { getLocale } = await import('next-intl/server');
+        locale = await getLocale();
+      } catch {
+        // Fallback: try to get from headers
+        try {
+          const { headers } = await import('next/headers');
+          const headersList = await headers();
+          const pathname = headersList.get('x-pathname') || headersList.get('referer') || '';
+          const pathSegments = pathname.split('/').filter(Boolean);
+          locale = (pathSegments[0] === 'lv' || pathSegments[0] === 'en') ? pathSegments[0] : 'lv';
+        } catch {
+          locale = 'lv';
+        }
+      }
+    }
+    if (['lv', 'en'].includes(locale)) {
+      const separator = path.includes('?') ? '&' : '?';
+      url = `${url}${separator}locale=${locale}`;
+    }
+  }
+  
+  const response = await fetch(url, {
     ...requestInit,
     headers,
     credentials: "include",

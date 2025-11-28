@@ -1,10 +1,13 @@
-import Link from "next/link";
+import { Link } from "@/app/lib/navigation";
 import { CategoryEntity, getCategories } from "@/server/categories";
 import { CATEGORY_TYPE_ADS } from "@/app/lib/constants";
 import { getCategoryIconConfig } from "@/app/lib/categoryIcon";
+import { getLocale } from 'next-intl/server';
 
 export default async function Categories() {
-  const categories: CategoryEntity[] = await getCategories();
+  // getLocale() should work, but let's ensure it's getting the correct locale
+  const locale = await getLocale();
+  const categories: CategoryEntity[] = await getCategories(locale);
 
   if (!categories?.length) {
     return null;

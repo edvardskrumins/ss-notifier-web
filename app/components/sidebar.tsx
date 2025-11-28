@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, usePathname, useRouter } from "@/app/lib/navigation";
+import { useTranslations } from "next-intl";
 import { Menu, Home, LogIn, LogOut, User as UserIcon, ArrowRightToLine, Bookmark } from "lucide-react";
 import { apiFetch } from "@/app/lib/apiClient";
 import { API_URL_WEB } from "@/app/lib/constants";
 import { getCookie } from "@/app/lib/cookies";
+import LanguageSwitcher from "./language-switcher";
 
 type ApiUser = {
   id: number;
@@ -19,6 +20,7 @@ type ApiUser = {
 
 export default function Sidebar() {
   const router = useRouter();
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [user, setUser] = useState<ApiUser | null>(null);
@@ -151,11 +153,11 @@ export default function Sidebar() {
           sidebarOpen ? "pointer-events-none opacity-0" : "pointer-events-auto opacity-100"
         }`}
       >
-        <button
-          type="button"
-          onClick={toggleSidebar}
-          aria-label="Toggle navigation"
-          aria-expanded={sidebarOpen}
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-label={t('common.toggleNavigation')}
+            aria-expanded={sidebarOpen}
           className="mb-6 rounded-xl border border-purple-400/70 bg-zinc-900/80 p-3 text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90"
         >
           <Menu
@@ -181,13 +183,13 @@ export default function Sidebar() {
       >
         <nav
           className="relative flex h-full flex-col p-6 pt-20"
-          aria-label="Sākuma navigācija"
+          aria-label={t('common.toggleNavigation')}
         >
           <div className="absolute right-6 top-6">
             <button
               type="button"
               onClick={toggleSidebar}
-              aria-label="Collapse navigation"
+              aria-label={t('common.collapseNavigation')}
               className="rounded-xl border border-purple-400/70 bg-zinc-900/80 p-3 text-white shadow transition hover:border-purple-300 hover:bg-zinc-900/90"
             >
               <ArrowRightToLine
@@ -198,17 +200,18 @@ export default function Sidebar() {
             </button>
           </div>
 
-        <div className="mb-8 flex items-center gap-3 border-b border-zinc-800 pb-4">
+        <div className="mb-8 flex flex-col gap-4 border-b border-zinc-800 pb-4">
           {isAuthenticated && (
-            <>
+            <div className="flex items-center gap-3">
               <UserIcon className="h-6 w-6 text-zinc-300" />
               <div>
                 <p className="text-sm font-semibold text-zinc-100">
                   {user?.name ?? ""}
                 </p>
               </div>
-            </>
-          ) }
+            </div>
+          )}
+          <LanguageSwitcher />
         </div>
 
         <ul className="space-y-3">
@@ -222,7 +225,7 @@ export default function Sidebar() {
               aria-current={pathname === "/" ? "page" : undefined}
             >
               <Home className="h-5 w-5 text-blue-400" />
-              Sākums
+              {t('common.home')}
             </Link>
           </li>
 
@@ -238,7 +241,7 @@ export default function Sidebar() {
                   aria-current={pathname?.startsWith("/saved-ad-notifications") ? "page" : undefined}
                 >
                   <Bookmark className="h-5 w-5 text-yellow-400" />
-                  Saglabātie
+                  {t('common.saved')}
                 </Link>
               </li>
               <li>
@@ -251,7 +254,7 @@ export default function Sidebar() {
                   aria-current={pathname === "/profile" ? "page" : undefined}
                 >
                   <UserIcon className="h-5 w-5 text-purple-300" />
-                  Profils
+                  {t('common.profile')}
                 </Link>
               </li>
             </>
@@ -265,7 +268,7 @@ export default function Sidebar() {
                 className="flex w-full items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-left text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80"
               >
                 <LogOut className="h-5 w-5 text-red-400" />
-                Atslēgties
+                {t('common.logout')}
               </button>
             ) : (
               <Link
@@ -274,7 +277,7 @@ export default function Sidebar() {
                 className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-medium transition hover:border-zinc-700 hover:bg-zinc-900/80"
               >
                 <LogIn className="h-5 w-5 text-green-400" />
-                Pieslēgties
+                {t('common.login')}
               </Link>
             )}
           </li>

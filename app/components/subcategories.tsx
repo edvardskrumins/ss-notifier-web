@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/app/lib/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Breadcrumbs from "@/app/lib/breadcrumbs";
 import { CATEGORY_TYPE_ADS } from "@/app/lib/constants";
@@ -8,18 +8,23 @@ import {
   getSubcategories,
   SubcategoryPayload,
 } from "@/server/categories";
+import { SubcategoriesText } from "./subcategories-text";
 
 type Props = {
   categoryId: string;
+  locale?: string;
 };
 
-export default async function Subcategories({ categoryId }: Props) {
+export default async function Subcategories({ categoryId, locale = 'lv' }: Props) {
   const { items, breadcrumbs, category }: SubcategoryPayload =
-    await getSubcategories(categoryId);
+    await getSubcategories(categoryId, locale);
 
   const parentCrumb = breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 2] : null;
   const backHref = parentCrumb ? `/subcategories/${parentCrumb.id}` : "/";
   const categoryConfig = category ? getCategoryIconConfig(category) : null;
+  
+  // Note: Translations need to be in a client component or passed as props
+  // For server components, we'll create a client wrapper if needed
 
   return (
     <section >    
@@ -44,7 +49,7 @@ export default async function Subcategories({ categoryId }: Props) {
         </div>
 
         {items.length === 0 ? (
-          <p className="mt-6 ">No subcategories found.</p>
+          <SubcategoriesText />
         ) : (
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((subcategory: CategoryEntity) => (

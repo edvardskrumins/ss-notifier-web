@@ -1,8 +1,5 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/app/components/sidebar";
-import ToasterProvider from "@/app/components/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,33 +17,22 @@ const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "SS Notifier",
   description: "SS Notifier",
 };
 
-export const dynamic = 'force-dynamic';
-
-export default async function RootLayout({
+// Root layout - Next.js requires html/body here
+// The locale-specific layout in [locale]/layout.tsx will wrap the content
+export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased bg-zinc-950 text-zinc-100`}
-      >
-        <Sidebar />
-        <main
-          className=" transition-[padding] duration-300"
-          style={{ paddingLeft: "var(--sidebar-offset, 0px)" }}
-        >
-          {children}
-        </main>
-        <ToasterProvider />
-      </body>
+    <html className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }
+

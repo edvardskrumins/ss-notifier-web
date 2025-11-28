@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { FilterEntity, FilterValue } from "@/server/categories";
 import { apiFetch, extractErrorMessage } from "@/app/lib/apiClient";
 
@@ -27,7 +28,7 @@ type FilterSelection = {
   filter_value_id?: number | null;
 };
 
-function renderFilterField(filter: FilterEntity) {
+function renderFilterField(filter: FilterEntity, t: ReturnType<typeof useTranslations<'notifications'>>) {
   const name = filter.form_param ?? `filter_${filter.id}`;
 
   switch (filter.type) {
@@ -82,7 +83,7 @@ function renderFilterField(filter: FilterEntity) {
           defaultValue=""
         >
           <option value="" disabled>
-            Izvēlies opciju
+            {t('chooseOption')}
           </option>
           {filter.values.map((option: FilterValue) => (
             <option key={option.id} value={option.value}>
@@ -156,6 +157,7 @@ function renderFilterField(filter: FilterEntity) {
 
 export default function AdsForm({ filters, categoryId }: AdsFormProps) {
   const router = useRouter();
+  const t = useTranslations('notifications');
   const [pending, setPending] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -278,7 +280,7 @@ export default function AdsForm({ filters, categoryId }: AdsFormProps) {
       typeof nameValue === "string" ? nameValue.trim() : "";
 
     if (!name) {
-      setError("Nosaukums ir obligāts.");
+      setError(t('nameRequired'));
       setPending(false);
       return;
     }
@@ -340,7 +342,7 @@ export default function AdsForm({ filters, categoryId }: AdsFormProps) {
           <div className="mx-auto w-full space-y-2 border-b border-zinc-800/70 pb-6 text-left sm:w-[85%] md:w-[75%]">
             <div className="space-y-1">
               <label className="text-sm font-semibold text-zinc-100" htmlFor="default_name">
-                Nosaukums{" "}
+                {t('name')}{" "}
                 <span className="text-red-500" aria-hidden="true">
                   *
                 </span>
@@ -351,7 +353,7 @@ export default function AdsForm({ filters, categoryId }: AdsFormProps) {
               name="name"
               required
               type="text"
-              placeholder="Nosaukums"
+              placeholder={t('name')}
               className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
             />
           </div>
@@ -366,7 +368,7 @@ export default function AdsForm({ filters, categoryId }: AdsFormProps) {
                   {filter.label}
                 </div>
               </div>
-              {renderFilterField(filter)}
+              {renderFilterField(filter, t)}
             </div>
           ))}
         </div>
