@@ -22,10 +22,11 @@ type RangeValue = {
 };
 
 type FilterSelection = {
-  filter_id: number;
+  filter_id: number | null;
   label: string;
   value: string | RangeValue;
   filter_value_id?: number | null;
+  form_param?: string;
 };
 
 function renderFilterField(filter: FilterEntity, t: ReturnType<typeof useTranslations<'notifications'>>) {
@@ -237,6 +238,16 @@ export default function AdsForm({ filters, categoryId }: AdsFormProps) {
   ): FilterSelection[] => {
     const selections: FilterSelection[] = [];
 
+    const regionValue = formData.get('sid');
+    if (regionValue && typeof regionValue === "string" && regionValue !== "") {
+      selections.push({
+        filter_id: null,
+        label: t('region'),
+        value: regionValue,
+        form_param: 'sid',
+      });
+    }
+
     filters.forEach((filter) => {
       const baseName = filter.form_param ?? `filter_${filter.id}`;
 
@@ -356,6 +367,51 @@ export default function AdsForm({ filters, categoryId }: AdsFormProps) {
               placeholder={t('name')}
               className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
             />
+          </div>
+
+          <div className="mx-auto w-full space-y-2 border-b border-zinc-800/70 pb-6 text-left sm:w-[85%] md:w-[75%]">
+            <div className="space-y-1">
+              <div className="text-sm font-semibold text-zinc-100">
+                {t('region')}
+              </div>
+            </div>
+            <select
+              name="sid"
+              className="mt-3 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 focus:border-zinc-600 focus:outline-none"
+            >
+              <option value="">{t('chooseOption')}</option>
+              <option value="0">{t('allAds')}</option>
+              <option value="riga_f">{t('riga')}</option>
+              <option value="yurmala_f">{t('yurmala')}</option>
+              <option value="riga_region_f">{t('rigaRegion')}</option>
+              <option value="aizkraukle_f">{t('aizkraukle')}</option>
+              <option value="aluksne_f">{t('aluksne')}</option>
+              <option value="balvi_f">{t('balvi')}</option>
+              <option value="bauska_f">{t('bauska')}</option>
+              <option value="cesis_f">{t('cesis')}</option>
+              <option value="daugavpils_f">{t('daugavpils')}</option>
+              <option value="dobele_f">{t('dobele')}</option>
+              <option value="gulbene_f">{t('gulbene')}</option>
+              <option value="jekabpils_f">{t('jekabpils')}</option>
+              <option value="jelgava_f">{t('jelgava')}</option>
+              <option value="kraslava_f">{t('kraslava')}</option>
+              <option value="kuldiga_f">{t('kuldiga')}</option>
+              <option value="liepaja_f">{t('liepaja')}</option>
+              <option value="limbadzi_f">{t('limbadzi')}</option>
+              <option value="ludza_f">{t('ludza')}</option>
+              <option value="madona_f">{t('madona')}</option>
+              <option value="ogre_f">{t('ogre')}</option>
+              <option value="preili_f">{t('preili')}</option>
+              <option value="rezekne_f">{t('rezekne')}</option>
+              <option value="saldus_f">{t('saldus')}</option>
+              <option value="talsi_f">{t('talsi')}</option>
+              <option value="tukums_f">{t('tukums')}</option>
+              <option value="valka_f">{t('valka')}</option>
+              <option value="valmiera_f">{t('valmiera')}</option>
+              <option value="ventspils_f">{t('ventspils')}</option>
+              <option value="estonia_f">{t('estonia')}</option>
+              <option value="lithuania_f">{t('lithuania')}</option>
+            </select>
           </div>
 
           {filters.map((filter: FilterEntity) => (
